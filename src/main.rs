@@ -6,22 +6,42 @@ fn main() {
 
 fn view(app: &App, frame: Frame) {
     let draw = app.draw();
-    let r = app.window_rect();
+    // let r = app.window_rect();
     let window = app.main_window();
     let win = window.rect();
     draw.background().color(GREEN);
     let crosshair_color = gray(0.5);
 
-    for r in r.subdivisions_iter() {
-        for r in r.subdivisions_iter() {
-            for r in r.subdivisions_iter() {
-                let side = r.w().min(r.h());
-                let start = r.xy();
-                let start_to_mouse = app.mouse.position() - start;
-                let target_mag = start_to_mouse.length().min(side * 0.5);
-                let end = start + start_to_mouse.normalize_or_zero().rotate(PI / 2.0) * target_mag;
-                draw.arrow().weight(5.0).points(start, end);
-            }
+//     for r in r.subdivisions_iter() {
+//         for r in r.subdivisions_iter() {
+//             for r in r.subdivisions_iter() {
+//                 let side = r.w().min(r.h());
+//                 let start = r.xy();
+//                 let start_to_mouse = app.mouse.position() - start;
+//                 let target_mag = start_to_mouse.length().min(side * 0.5);
+//                 let end = start + start_to_mouse.normalize_or_zero().rotate(PI / 2.0) * target_mag;
+//                 draw.arrow().weight(5.0).points(start, end);
+//             }
+//         }
+//     }
+
+    let arrowcount = 5;
+    let farowcount = (arrowcount * 2 + 1).to_f32().unwrap();
+
+    for xval in (-1 * arrowcount)..=arrowcount {
+        for yval in (-1 * arrowcount)..=arrowcount {
+            let w = win.w();
+            let h = win.h();
+            let dw = w / farowcount;
+            let dh = h / farowcount;
+            let xf = xval.to_f32().unwrap();
+            let yf = yval.to_f32().unwrap();
+            let side = dw.min(dh);
+            let start: Point2 = [xf * dw,  yf * dh].into();
+            let start_to_mouse = app.mouse.position() - start;
+            let target_mag = start_to_mouse.length().min(side * 0.5);
+            let end = start + start_to_mouse.normalize_or_zero().rotate(PI / 2.0) * target_mag;
+            draw.arrow().weight(5.0).points(start, end);
         }
     }
 
