@@ -1,4 +1,4 @@
-use nannou::prelude::*;
+use nannou::{prelude::*, state::time};
 
 fn main() {
     nannou::sketch(view).run()
@@ -44,6 +44,7 @@ fn view(app: &App, frame: Frame) {
             let target_mag = start_to_mouse.length().min(side * 0.5);
             let end = start + start_to_mouse.normalize_or_zero().rotate(PI / -2.0) * target_mag;
             draw.arrow().weight(5.0).hsv(start.length() * 2.0.sqrt() / (w * h), 1.0, 1.0).points(start, end);
+            let t = time::Time.since_start();
         }
     }
 
